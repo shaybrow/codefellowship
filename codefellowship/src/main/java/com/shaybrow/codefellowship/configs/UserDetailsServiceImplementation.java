@@ -14,7 +14,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        return codefellowshipUserRepo.findByUsername(username);
     }
 
 }

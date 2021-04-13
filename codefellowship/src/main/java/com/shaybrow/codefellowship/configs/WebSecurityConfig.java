@@ -38,15 +38,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //                    allowing access
                     .authorizeRequests()
                     .antMatchers("/").permitAll()
-                    .antMatchers("/song").permitAll()
-                    .antMatchers("/signup", "/login").permitAll()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/signup", "/login", "/codeuser").permitAll()
                     .anyRequest().authenticated()
 
 //                using and allows us to change a different set of parameters
 
 //                    returns to
                     .and()
-                    .formLogin().defaultSuccessUrl("/").loginPage("/login")
+                    .formLogin().loginPage("/login").defaultSuccessUrl("/")
 //                      allows basic logout functionality
                     .and()
                     .logout()
