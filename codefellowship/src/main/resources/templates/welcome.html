@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Codefellowship</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Welcome to Codefellowship</h1>
+<div th:replace="./fragments/user :: user-bar"></div>
 <a href="/logout">logout</a>
 <a href="/signup">signup</a>
 <a href="/login">login</a>

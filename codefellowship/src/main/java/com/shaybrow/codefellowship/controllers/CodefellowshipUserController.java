@@ -1,9 +1,14 @@
 package com.shaybrow.codefellowship.controllers;
 
-import com.shaybrow.codefellowship.codefellowshipUsers.CodefellowshipUser;
+import com.shaybrow.codefellowship.constructors.CodefellowshipUser;
 import com.shaybrow.codefellowship.repos.CodefellowshipUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class CodefellowshipUserController {
@@ -21,20 +28,37 @@ public class CodefellowshipUserController {
     @Autowired
     CodefellowshipUserRepo codefellowshipUserRepo;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+
     @PostMapping("/codeuser")
     public RedirectView createUser(String username, String password,
                                    String firstName, String lastName, String dateOfBirth,
-                                   String bio){
-        password = passwordEncoder.encode(password);
+                                   String bio, HttpServletRequest httpServletRequest){
+        String passwordEncoded = passwordEncoder.encode(password);
 
-        CodefellowshipUser user = new CodefellowshipUser(username, password, firstName, lastName,
+        CodefellowshipUser user = new CodefellowshipUser(username, passwordEncoded, firstName, lastName,
                 dateOfBirth, bio);
-        codefellowshipUserRepo.save(user);
+        try {
+            codefellowshipUserRepo.save(user);
+        }catch (Exception e){
+            return new RedirectView("/?username=duplicate");
+        }
         System.out.println(user.toString());
-        return new RedirectView("/");
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username,password);
+        token.setDetails(new WebAuthenticationDetails(httpServletRequest));
+        Authentication authentication = authenticationManager.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+        return new RedirectView("/myprofile");
     }
     @GetMapping("/")
-    public String showSplashPage(){
+    public String showSplashPage(Principal p, Model m){
+        CodefellowshipUser user1 = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince" , user1);
+
         return "welcome.html";
     }
     @GetMapping("signup")
@@ -47,22 +71,39 @@ public class CodefellowshipUserController {
         return "login.html";
     }
 
-    @GetMapping ("/something")
-    public String showSongUsers (Principal p, Model m){
-    return null;
-    }
-    @GetMapping("/codefellow")
-    public String showCodefellow (Principal p, Model m){
-        m.addAttribute("username", p.getName());
 
-        return "codefellow.html";
+    @GetMapping("/user")
+    public String seeAllUsers (Principal p, Model m){
+        List<CodefellowshipUser> users = codefellowshipUserRepo.findAll();
+        CodefellowshipUser user1 = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince" , user1);
+        m.addAttribute("users", users);
+
+        return "siteusers";
     }
     @GetMapping("/user/{id}")
     public String userRender(Principal p, Model m,
                              @PathVariable long id){
-        CodefellowshipUser user = codefellowshipUserRepo.getOne(id);
+        CodefellowshipUser user = codefellowshipUserRepo.findById(id).get();
         m.addAttribute("user", user);
+        CodefellowshipUser visitor = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince", visitor);
         return "codeuser.html";
 
     }
+    @GetMapping("/myprofile")
+    public String myProfileRender (Principal p, Model m){
+        CodefellowshipUser user = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince",user);
+        m.addAttribute("user", user);
+
+        return "codeuser.html";
+
+    }
+
+//    @PutMapping("/user/{id}")
+//    public RedirectView update (@PathVariable long id, String bio){
+//        CodefellowshipUser user = codefellowshipUserRepo.findById(id).get();
+//        return RedirectView "codeuser.html";
+//    }
 }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site Users</title>
+</head>
+<body>
+<h1>Site Users</h1>
+<div th:replace="./fragments/nav :: nav-bar"></div>
+<div th:replace="./fragments/user :: user-bar"></div>
+
+<ul th:each=" coder: ${users}">
+    <li th:text="${coder.username}"></li>
+    <a th:href="'/user/' + ${coder.id}"> See details</a>
+
+
+</ul>
+</body>
+</html>

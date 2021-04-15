@@ -1,15 +1,13 @@
-package com.shaybrow.codefellowship.codefellowshipUsers;
+package com.shaybrow.codefellowship.constructors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 @Entity
 public class CodefellowshipUser implements UserDetails {
@@ -17,12 +15,17 @@ public class CodefellowshipUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     //    these can technically be potato but much easier as these exact values
+    @Column(unique = true) // this tells our DB that string must be
     String username;
     String password;
     String firstName;
     String lastName;
     String dateOfBirth;
+    @Column(columnDefinition = "TEXT")
     String bio;
+    @OneToMany(mappedBy = "author")
+    List<Post> postList;
+
 
     public CodefellowshipUser(){}
     public CodefellowshipUser(String username, String password, String firstName,
@@ -35,16 +38,21 @@ public class CodefellowshipUser implements UserDetails {
         this.bio = bio;
     }
 
-    public CodefellowshipUser(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+
 
     @Override
     public String toString() {
         return "CodefellowshipUser{" +
                 "username='" + username + '\'' +
                 '}';
+    }
+
+    public List<Post> getPostList() {
+        return postList;
+    }
+
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
     }
 
     public long getId() {

@@ -6,6 +6,8 @@
 </head>
 <body>
 <h1>Signup Now!</h1>
+<header th:insert="/fragments/nav :: nav-bar"></header>
+<!--inserts the fragment into the header-->
 <form action="/codeuser" method="post">
     <label for="username">username</label>
     <input type="text" name="username" required>
