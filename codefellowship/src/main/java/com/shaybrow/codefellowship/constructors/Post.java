@@ -9,14 +9,14 @@ public class Post {
     long id;
 
 
-    @OneToOne
-    String username;
-    @Lob
-    String post;
+    @ManyToOne
+    public CodefellowshipUser author;
+    @Column(columnDefinition = "TEXT")
+    public String post;
 
     public Post (){}
-    public Post(String username, String post) {
-        this.username = username;
+    public Post(CodefellowshipUser author, String post) {
+        this.author = author;
         this.post = post;
     }
 

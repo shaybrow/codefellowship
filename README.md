@@ -2,11 +2,11 @@
 
 ## Summary
 
-This app demonstrates basic Spring Security Authentication and Authorization functionality. It utilizes Thymeleaf and postgresql.
+This app demonstrates basic Spring Security Authentication and Authorization functionality. It utilizes Thymeleaf and postgresql. Users have the ability to create posts that are associated with themand other users are able to visit their page to sse their posts.
 
 ## How To Run
 
-./gradle run
+./gradle bootrun
 
 ## Link
 
@@ -25,5 +25,9 @@ This app demonstrates basic Spring Security Authentication and Authorization fun
 - CodefellowshipUserRepo extends Jpa repository to allow searches by username through the DB
 
 - Posts creates Posts with relationship to user
+
+- Postcontroller handles routes related to posts
+
+- Post repo handles the DB for posts
 
 

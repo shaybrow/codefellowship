@@ -4,7 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 @Entity
 public class CodefellowshipUser implements UserDetails {
@@ -18,8 +21,10 @@ public class CodefellowshipUser implements UserDetails {
     String firstName;
     String lastName;
     String dateOfBirth;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     String bio;
+    @OneToMany(mappedBy = "author")
+    List<Post> postList;
 
 
     public CodefellowshipUser(){}
@@ -40,6 +45,14 @@ public class CodefellowshipUser implements UserDetails {
         return "CodefellowshipUser{" +
                 "username='" + username + '\'' +
                 '}';
+    }
+
+    public List<Post> getPostList() {
+        return postList;
+    }
+
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
     }
 
     public long getId() {

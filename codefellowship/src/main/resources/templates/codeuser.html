@@ -8,13 +8,33 @@
 </head>
 <body>
 <h1 th:text="'Meet ' + ${user.username}"></h1>
-
+<div th:replace="./fragments/nav :: nav-bar"></div>
+<div th:replace="./fragments/user :: user-bar"></div>
+<a href="/user">See Site Users</a>
 <ul>
+    <img src="https://www.completecontroller.com/wp-content/uploads/Hackers-Complete-Controller-1030x687.jpg" alt="">
     <li th:text="'First Name:' + ${user.firstName}"></li>
     <li th:text="'Last Name:' + ${user.lastName}"></li>
     <li th:text="'Date of Birth:' + ${user.dateOfBirth}"></li>
     <li th:text="'Bio:' + ${user.bio}"></li>
 <!--th:unless for if not statements-->
+<!--    <form th:unless="${visitor}" th:action="'/users/' + @{user.id}"-->
 </ul>
+
+<form action="/post" method="post">
+<!--    <label for="username">username</label>-->
+    <input type="hidden" th:name="${user.username}">
+
+    <label for="post">Say Something!</label>
+    <textarea name="post" id="" cols="30" rows="10"></textarea>
+
+
+
+    <input type="submit" value="post">
+
+    <ul th:each=" post: ${user.postList}">
+        <li th:text="${post.post}"></li>
+
+    </ul>
 </body>
 </html>

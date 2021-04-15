@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class CodefellowshipUserController {
@@ -29,6 +30,7 @@ public class CodefellowshipUserController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
 
     @PostMapping("/codeuser")
     public RedirectView createUser(String username, String password,
@@ -53,7 +55,10 @@ public class CodefellowshipUserController {
         return new RedirectView("/myprofile");
     }
     @GetMapping("/")
-    public String showSplashPage(){
+    public String showSplashPage(Principal p, Model m){
+        CodefellowshipUser user1 = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince" , user1);
+
         return "welcome.html";
     }
     @GetMapping("signup")
@@ -66,15 +71,15 @@ public class CodefellowshipUserController {
         return "login.html";
     }
 
-    @GetMapping ("/something")
-    public String showSongUsers (Principal p, Model m){
-    return null;
-    }
-    @GetMapping("/codefellow")
-    public String showCodefellow (Principal p, Model m){
-        m.addAttribute("username", p.getName());
 
-        return "codefellow.html";
+    @GetMapping("/user")
+    public String seeAllUsers (Principal p, Model m){
+        List<CodefellowshipUser> users = codefellowshipUserRepo.findAll();
+        CodefellowshipUser user1 = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince" , user1);
+        m.addAttribute("users", users);
+
+        return "siteusers";
     }
     @GetMapping("/user/{id}")
     public String userRender(Principal p, Model m,
@@ -82,17 +87,20 @@ public class CodefellowshipUserController {
         CodefellowshipUser user = codefellowshipUserRepo.findById(id).get();
         m.addAttribute("user", user);
         CodefellowshipUser visitor = codefellowshipUserRepo.findByUsername(p.getName());
-        m.addAttribute("placeholder", visitor);
+        m.addAttribute("prince", visitor);
         return "codeuser.html";
 
     }
     @GetMapping("/myprofile")
     public String myProfileRender (Principal p, Model m){
         CodefellowshipUser user = codefellowshipUserRepo.findByUsername(p.getName());
+        m.addAttribute("prince",user);
         m.addAttribute("user", user);
+
         return "codeuser.html";
 
     }
+
 //    @PutMapping("/user/{id}")
 //    public RedirectView update (@PathVariable long id, String bio){
 //        CodefellowshipUser user = codefellowshipUserRepo.findById(id).get();
