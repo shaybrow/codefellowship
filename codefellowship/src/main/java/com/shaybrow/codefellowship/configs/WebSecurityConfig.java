@@ -49,7 +49,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
                     .antMatchers("/").permitAll()
                     .antMatchers("/signup", "/login", "/codeuser").permitAll()
                     .antMatchers(HttpMethod.GET, "/user/*").permitAll()
+                    .antMatchers("/css/**").permitAll()
                     .anyRequest().authenticated()
+//                  access denied returns to home route
+                    .and().exceptionHandling().accessDeniedPage("/")
 
 //                using and allows us to change a different set of parameters
 

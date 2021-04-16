@@ -4,10 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class CodefellowshipUser implements UserDetails {
@@ -25,6 +22,17 @@ public class CodefellowshipUser implements UserDetails {
     String bio;
     @OneToMany(mappedBy = "author")
     List<Post> postList;
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name="follows",
+            joinColumns = {@JoinColumn(name="follow_to")},
+            inverseJoinColumns = {@JoinColumn(name="follow_from")}
+    )
+    public Set<CodefellowshipUser> follows;
+
+    @ManyToMany(mappedBy = "follows")
+    public Set<CodefellowshipUser> followers;
+
 
 
     public CodefellowshipUser(){}
@@ -37,7 +45,6 @@ public class CodefellowshipUser implements UserDetails {
         this.dateOfBirth = dateOfBirth;
         this.bio = bio;
     }
-
 
 
     @Override
