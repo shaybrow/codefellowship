@@ -2,7 +2,7 @@
 
 ## Summary
 
-This app demonstrates basic Spring Security Authentication and Authorization functionality. It utilizes Thymeleaf and postgresql. Users have the ability to create posts that are associated with themand other users are able to visit their page to sse their posts.
+This app demonstrates basic Spring Security Authentication and Authorization functionality. It utilizes Thymeleaf and postgresql. Users have the ability to create posts that are associated with themand other users are able to visit their page to sse their posts. Users can also follow other users. User profile will display which users are following them.
 
 ## How To Run
 

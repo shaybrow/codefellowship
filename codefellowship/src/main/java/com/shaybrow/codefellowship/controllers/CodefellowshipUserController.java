@@ -19,6 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class CodefellowshipUserController {
@@ -55,9 +56,9 @@ public class CodefellowshipUserController {
         return new RedirectView("/myprofile");
     }
     @GetMapping("/")
-    public String showSplashPage(Principal p, Model m){
-        CodefellowshipUser user1 = codefellowshipUserRepo.findByUsername(p.getName());
-        m.addAttribute("prince" , user1);
+    public String showSplashPage(){
+//        CodefellowshipUser user1 = codefellowshipUserRepo.findByUsername(p.getName());
+//        m.addAttribute("prince" , user1);
 
         return "welcome.html";
     }
@@ -99,6 +100,14 @@ public class CodefellowshipUserController {
 
         return "codeuser.html";
 
+    }
+    @PostMapping("/follow/{id}")
+    public RedirectView followUser (String username, Principal p, @PathVariable long id){
+        CodefellowshipUser follower = codefellowshipUserRepo.findByUsername(p.getName());
+        CodefellowshipUser followed = codefellowshipUserRepo.findById(id).get();
+        followed.followers.add(follower);
+        codefellowshipUserRepo.save(followed);
+        return new RedirectView("/user/{id}");
     }
 
 //    @PutMapping("/user/{id}")

@@ -17,10 +17,24 @@
     <li th:text="'Last Name:' + ${user.lastName}"></li>
     <li th:text="'Date of Birth:' + ${user.dateOfBirth}"></li>
     <li th:text="'Bio:' + ${user.bio}"></li>
+    <li>Followers:</li>
+    <ul th:each=" follower: ${user.followers}">
+        <li th:text="${follower.username}"></li>
+
+    </ul>
+
 <!--th:unless for if not statements-->
 <!--    <form th:unless="${visitor}" th:action="'/users/' + @{user.id}"-->
 </ul>
+<div th:if="${user.username != prince.username} ">
+    <form th:action="'/follow/' + ${user.id}" method="post">
+        <!--    <label for="username">username</label>-->
+<!--        <input type="hidden" th:name="${user.username}">-->
 
+        <input type="submit" value="follow">
+</div>
+
+<div th:if="${user.username == prince.username} ">
 <form action="/post" method="post">
 <!--    <label for="username">username</label>-->
     <input type="hidden" th:name="${user.username}">
@@ -31,7 +45,7 @@
 
 
     <input type="submit" value="post">
-
+</div>
     <ul th:each=" post: ${user.postList}">
         <li th:text="${post.post}"></li>
 
